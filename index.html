@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#70d6ff">
+<title>BALLOON POP – PECAHKAN BALON PINTAR</title>
+<style>
+:root{--ink:#24304a;--pink:#ff5fa2;--blue:#43b9ef;--yellow:#ffd166;--green:#5bd6a2;--purple:#9b7bff}
+*{box-sizing:border-box} body{margin:0;font-family:"Trebuchet MS",system-ui,sans-serif;color:var(--ink);background:linear-gradient(180deg,#77d7ff 0%,#c7f0ff 55%,#fff4d5 100%);min-height:100vh;overflow-x:hidden}
+button,input{font:inherit}button{border:0;border-radius:14px;padding:11px 17px;font-weight:800;cursor:pointer;background:#fff;color:var(--ink);box-shadow:0 4px 0 #00000018;transition:.15s}button:hover{transform:translateY(-2px)}button:active{transform:translateY(2px);box-shadow:none}.primary{background:linear-gradient(135deg,#ff6ca8,#ff8b75);color:white}.secondary{background:#fff}.toggle.on{background:#5bd6a2;color:#143d37}
+header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px clamp(12px,3vw,34px);background:#ffffffd9;backdrop-filter:blur(12px);box-shadow:0 4px 18px #285b7a18}
+.brand{font-weight:1000;letter-spacing:.3px;font-size:clamp(14px,2vw,20px)}.brand span{color:#ff5598}.stats{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}.pill{background:#eef8ff;border:2px solid #d7efff;border-radius:999px;padding:7px 12px;font-size:13px;font-weight:900}
+main{width:min(1100px,94vw);margin:20px auto 50px}.panel{background:#ffffffdf;border:3px solid #fff;border-radius:28px;box-shadow:0 15px 40px #387da522;padding:clamp(17px,3vw,30px)}
+h1,h2,h3,p{margin-top:0}h1{font-size:clamp(27px,5vw,48px);line-height:1.05;margin-bottom:10px}h1 .pop{color:#ff5598;text-shadow:2px 3px #ffe2ef}h2{font-size:clamp(20px,3vw,28px)}.sub{color:#52647c;font-size:16px;line-height:1.5}
+.screen{display:none}.screen.active{display:block}.welcome{text-align:center;max-width:760px;margin:5vh auto}.logo-balloon{font-size:76px;filter:drop-shadow(0 10px 5px #407da544);animation:bob 2.6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-13px) rotate(4deg)}}
+.namebox{display:flex;gap:10px;max-width:480px;margin:22px auto 0}.namebox input{flex:1;min-width:0;padding:14px 16px;border:2px solid #b9e7fa;border-radius:14px;outline:none}.namebox input:focus{border-color:#39b6ed}
+.levelrow{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}.progress{height:13px;background:#e8f2fa;border-radius:20px;overflow:hidden;margin:10px 0 20px}.progress>div{height:100%;width:0;background:linear-gradient(90deg,#54d6a2,#42b9f1,#a88aff);border-radius:20px;transition:width .4s}
+.question-card{text-align:center;background:linear-gradient(135deg,#fff,#f4fbff);border-radius:22px;padding:20px;margin-bottom:14px;border:2px solid #e2f5ff}.tag{display:inline-block;background:#fff0b9;color:#79530a;border-radius:999px;padding:5px 12px;font-size:12px;font-weight:1000;letter-spacing:.6px;margin-bottom:10px}.question{font-size:clamp(19px,3vw,27px);font-weight:900;line-height:1.35;margin:0}
+.playarea{position:relative;min-height:330px;border-radius:24px;overflow:hidden;background:linear-gradient(#a6e7ff,#d8f5ff 68%,#eafff1);border:2px solid #c5edff}
+.cloud{position:absolute;color:#fff;font-size:55px;opacity:.75;filter:drop-shadow(0 5px 2px #6bb8d522);animation:cloud 15s linear infinite;pointer-events:none}.cloud.c1{top:8px;left:5%}.cloud.c2{top:70px;right:5%;animation-delay:-7s}.cloud.c3{bottom:5px;left:45%;font-size:42px}
+@keyframes cloud{0%{transform:translateX(-12px)}50%{transform:translateX(18px)}100%{transform:translateX(-12px)}}
+.balloons{position:absolute;inset:0;display:flex;align-items:center;justify-content:space-evenly;gap:10px;padding:30px 12px;flex-wrap:wrap}
+.balloon{--balloon:#ff6da8;position:relative;width:clamp(105px,17vw,150px);height:clamp(135px,22vw,185px);border-radius:52% 48% 48% 52%/42% 42% 58% 58%;background:radial-gradient(circle at 28% 22%,#ffffffd9 0 5%,#ffffff55 9%,transparent 23%),linear-gradient(135deg,#ffffff44,transparent 38%),var(--balloon);box-shadow:inset -10px -13px 20px #00000020,inset 8px 7px 13px #ffffff55,0 12px 14px #346c8b25;display:flex;align-items:center;justify-content:center;text-align:center;padding:17px 12px;color:white;font-weight:1000;font-size:clamp(13px,1.8vw,17px);text-shadow:0 2px 3px #0005;cursor:pointer;user-select:none;animation:float 3.1s ease-in-out infinite;transition:transform .15s,filter .15s;z-index:2}
+.balloon:after{content:"";position:absolute;bottom:-10px;left:calc(50% - 7px);border-left:7px solid transparent;border-right:7px solid transparent;border-top:12px solid var(--balloon);filter:brightness(.85)}
+.balloon:before{content:"";position:absolute;width:2px;height:48px;background:#ffffffa6;top:100%;left:50%;transform-origin:top;z-index:-1}
+.balloon:nth-child(2){animation-delay:-.8s}.balloon:nth-child(3){animation-delay:-1.6s}.balloon:nth-child(4){animation-delay:-2.2s}
+@keyframes float{0%,100%{transform:translateY(8px) rotate(-2deg)}50%{transform:translateY(-13px) rotate(2deg)}}
+.balloon:hover,.balloon.target{transform:scale(1.08);filter:brightness(1.08);outline:5px solid #fff9;outline-offset:2px}.balloon.wrong{animation:shake .35s;filter:grayscale(.25) brightness(.85)}.balloon.correct{animation:burst .35s forwards}
+@keyframes shake{25%{transform:translateX(-9px) rotate(-8deg)}75%{transform:translateX(9px) rotate(8deg)}}
+@keyframes burst{to{transform:scale(1.5);opacity:0;filter:blur(8px)}}
+.feedback{min-height:35px;text-align:center;font-weight:900;font-size:17px;padding:8px;color:#39506a}.feedback.good{color:#168b63}.feedback.bad{color:#d94e74}
+.hud{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:13px}.hint{font-size:12px;color:#58718a}.camera-area{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.camera-wrap{display:none;position:relative;width:150px;height:105px;border-radius:12px;overflow:hidden;background:#17334c}.camera-wrap video,.camera-wrap canvas{position:absolute;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}.camera-wrap canvas{z-index:2}
+#pointer{position:fixed;z-index:50;left:50%;top:50%;width:22px;height:22px;border:3px solid #fff;border-radius:50%;background:#ff4f9b88;box-shadow:0 0 0 3px #ff4f9b;pointer-events:none;display:none;transform:translate(-50%,-50%)}
+.end{text-align:center}.bigscore{font-size:clamp(38px,8vw,70px);font-weight:1000;color:#ff5798}.stars{font-size:42px;letter-spacing:8px}
+footer{text-align:center;color:#52728a;font-size:12px;margin-top:20px}
+@media(max-width:600px){header{align-items:flex-start}.brand{max-width:130px}.stats{gap:5px}.pill{font-size:11px;padding:6px 8px}.playarea{min-height:390px}.balloons{gap:4px;padding:15px 8px}.balloon{width: min(39vw,145px);height:155px}.namebox{flex-direction:column}.namebox button{width:100%}}
+</style>
+</head>
+<body>
+<header>
+ <div class="brand">🎈 BALLOON <span>POP!</span></div>
+ <div class="stats"><div class="pill">👤 <span id="studentLabel">Pemain</span></div><div class="pill">⭐ Skor: <span id="scoreLabel">0</span></div><div class="pill">⏱️ <span id="timerLabel">00:00</span></div></div>
+</header>
+<main>
+<section id="welcome" class="screen active">
+ <div class="panel welcome">
+  <div class="logo-balloon">🎈🎈🎈</div>
+  <h1><span class="pop">BALLOON POP</span><br>PECAHKAN BALON PINTAR!</h1>
+  <p class="sub">Ayo belajar <b>majas personifikasi</b>! Pecahkan balon yang berisi jawaban paling tepat. Kumpulkan bintang dan jadilah jagoan Bahasa Indonesia!</p>
+  <p><b>BAHASA INDONESIA · KELAS IV</b><br>5 Level · 15 Tantangan · LOTS – MOTS – HOTS</p>
+  <div class="namebox"><input id="studentName" maxlength="24" placeholder="Masukkan nama siswa..." autocomplete="name"><button class="primary" id="startBtn">MULAI BERMAIN 🚀</button></div>
+  <p class="hint" style="margin-top:15px">Kamera bersifat opsional. Kamu juga bisa bermain dengan mouse atau layar sentuh.</p>
+ </div>
+</section>
+<section id="game" class="screen">
+ <div class="panel">
+  <div class="levelrow"><div><b id="levelTitle">LEVEL 1</b> <span class="hint" id="levelTheme">Kenali Majas</span></div><b id="questionCount">Soal 1 / 15</b></div>
+  <div class="progress"><div id="progressFill"></div></div>
+  <div class="question-card"><span class="tag" id="difficulty">LOTS · MUDAH</span><p class="question" id="questionText"></p></div>
+  <div class="playarea" id="playarea"><span class="cloud c1">☁️</span><span class="cloud c2">☁️</span><span class="cloud c3">☁️</span><div class="balloons" id="balloons"></div></div>
+  <div class="feedback" id="feedback" aria-live="polite">Pilih balon dengan jawaban yang benar!</div>
+  <div class="hud">
+   <div class="camera-area"><button id="cameraBtn" class="secondary">📷 Aktifkan kamera</button><button id="soundBtn" class="toggle on">🔊 Suara: ON</button><div class="camera-wrap" id="cameraWrap"><video id="video" autoplay playsinline muted></video><canvas id="handCanvas"></canvas></div></div>
+   <div class="hint" id="controlHint">Klik / sentuh balon untuk memecahkannya.</div>
+  </div>
+ </div>
+</section>
+<section id="finish" class="screen"><div class="panel end">
+ <div class="logo-balloon">🏆🎈🏆</div><h1>HEBAT SEKALI!</h1><p class="sub" id="finishMessage">Kamu telah menyelesaikan semua tantangan.</p>
+ <div class="stars">⭐⭐⭐</div><div class="bigscore" id="finalScore">0</div><b>POIN TERKUMPUL</b><p id="resultDetail" class="sub"></p>
+ <button class="primary" id="againBtn">🔁 MAIN LAGI</button>
+ </div></section>
+<footer>Belajar Bahasa Indonesia jadi lebih seru bersama Balloon Pop! ☁️</footer>
+</main>
+<div id="pointer"></div>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+<script>
+"use strict";
+const questions=[
+ {q:"Kalimat manakah yang menggunakan majas personifikasi?",d:"LOTS · MUDAH",a:["Angin berbisik di telingaku","Adik berlari sangat cepat","Ibu memasak nasi"],c:0,e:"Angin diberi sifat manusia, yaitu berbisik."},
+ {q:"Apa yang dimaksud dengan majas personifikasi?",d:"MOTS · SEDANG",a:["Membandingkan dua benda dengan kata seperti","Memberi sifat manusia kepada benda atau alam","Mengulang kata agar lebih indah"],c:1,e:"Personifikasi menggambarkan benda atau alam seolah-olah dapat bertindak seperti manusia."},
+ {q:"Kalimat 'Matahari tersenyum menyambut pagi' termasuk personifikasi karena ...",d:"HOTS · MENANTANG",a:["Matahari benar-benar memiliki mulut","Matahari digambarkan melakukan tindakan manusia","Pagi hari selalu cerah"],c:1,e:"Tersenyum adalah tindakan manusia yang diberikan kepada matahari."},
+ {q:"Pilih kalimat yang mengandung majas personifikasi!",d:"LOTS · MUDAH",a:["Buku itu setebal lima sentimeter","Ombak berkejaran menuju pantai","Kakak membeli dua pensil"],c:1,e:"Ombak digambarkan seperti manusia yang dapat berkejaran."},
+ {q:"Mengapa kalimat 'Daun-daun menari tertiup angin' termasuk personifikasi?",d:"MOTS · SEDANG",a:["Daun diberi gerakan seperti manusia menari","Daun memiliki kaki sungguhan","Angin sedang mengikuti lomba"],c:0,e:"Menari merupakan gerakan manusia yang digunakan untuk menggambarkan daun."},
+ {q:"Kalimat personifikasi yang paling tepat untuk menggambarkan hujan adalah ...",d:"HOTS · MENANTANG",a:["Hujan turun sejak siang","Rintik hujan mengetuk-ngetuk jendela","Air hujan membasahi jalan"],c:1,e:"Mengetuk merupakan tindakan manusia; hujan digambarkan seolah-olah mengetuk."},
+ {q:"Manakah contoh majas personifikasi?",d:"LOTS · MUDAH",a:["Jam dinding itu bundar","Jam dinding terus berlari mengejar waktu","Jam dinding berwarna putih"],c:1,e:"Jam digambarkan dapat berlari seperti manusia."},
+ {q:"Pada kalimat 'Bintang berkedip malu-malu di langit', sifat manusia yang diberikan kepada bintang adalah ...",d:"MOTS · SEDANG",a:["Berkedip dan merasa malu","Bersinar terang saja","Berada jauh di langit"],c:0,e:"Bintang digambarkan dapat berkedip dan merasa malu seperti manusia."},
+ {q:"Kamu ingin membuat puisi tentang sungai. Kalimat personifikasi yang paling kuat adalah ...",d:"HOTS · MENANTANG",a:["Sungai itu panjang dan lebar","Air sungai mengalir ke laut","Sungai bernyanyi merdu di antara bebatuan"],c:2,e:"Bernyanyi adalah kegiatan manusia yang membuat gambaran sungai terasa hidup."},
+ {q:"Kalimat berikut yang bukan personifikasi adalah ...",d:"LOTS · MUDAH",a:["Awan berarak perlahan","Bunga melambai kepada kupu-kupu","Ayah membaca koran di teras"],c:2,e:"Ayah memang manusia yang membaca; tidak ada benda yang diberi sifat manusia."},
+ {q:"Apa tujuan penggunaan personifikasi dalam sebuah cerita?",d:"MOTS · SEDANG",a:["Membuat benda menjadi benar-benar hidup","Membuat gambaran lebih hidup dan menarik","Menyampaikan angka dengan tepat"],c:1,e:"Personifikasi membantu pembaca membayangkan suasana dengan lebih hidup."},
+ {q:"Perhatikan: 'Pintu tua itu mengeluh saat dibuka.' Apa makna ungkapan tersebut?",d:"HOTS · MENANTANG",a:["Pintu mengeluarkan suara seperti keluhan","Pintu sedang merasa sedih sungguhan","Ada orang yang mengeluh di luar"],c:0,e:"Suara pintu saat dibuka diibaratkan keluhan manusia."},
+ {q:"Pilih contoh personifikasi tentang alam!",d:"LOTS · MUDAH",a:["Gunung itu sangat tinggi","Mentari mengintip dari balik awan","Tanah di kebun berwarna cokelat"],c:1,e:"Mengintip adalah tindakan manusia yang diberikan kepada mentari."},
+ {q:"Kalimat 'Api melahap habis kayu kering' menggunakan personifikasi karena ...",d:"MOTS · SEDANG",a:["Api diberi tindakan seperti makhluk yang makan","Kayu dapat berbicara","Api memiliki gigi sungguhan"],c:0,e:"Melahap biasanya dilakukan makhluk hidup saat makan."},
+ {q:"Kamu diminta memperindah kalimat 'Angin bertiup di malam hari'. Pilihan personifikasi terbaik adalah ...",d:"HOTS · MENANTANG",a:["Angin bertiup sangat kencang","Angin malam membelai lembut wajahku","Angin terasa dingin sekali"],c:1,e:"Membelai adalah tindakan manusia yang membuat kalimat lebih puitis."}
+];
+const colors=["#ff6497","#8b78f7","#32bce5","#ffb938"];
+let name="Pemain",score=0,index=0,seconds=0,timer=null,soundOn=true,locked=false,stream=null,mpCamera=null,hands=null,handReady=false,pinchWasDown=false,lastPinch=0;
+const $=id=>document.getElementById(id);
+function show(id){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));$(id).classList.add("active")}
+function start(){name=$("studentName").value.trim()||"Pemain";score=0;index=0;seconds=0;locked=false;$("studentLabel").textContent=name;$("scoreLabel").textContent=score;clearInterval(timer);timer=setInterval(()=>{seconds++;$("timerLabel").textContent=fmt(seconds)},1000);show("game");render()}
+function fmt(n){return String(Math.floor(n/60)).padStart(2,"0")+":"+String(n%60).padStart(2,"0")}
+function render(){locked=false;let item=questions[index],level=Math.floor(index/3)+1,levelNames=["Kenali Majas","Temukan Ciri","Personifikasi Alam","Pahami Makna","Jagoan Majas"];
+$("levelTitle").textContent="LEVEL "+level;$("levelTheme").textContent="· "+levelNames[level-1];$("questionCount").textContent="Soal "+(index+1)+" / 15";$("progressFill").style.width=(index/15*100)+"%";$("difficulty").textContent=item.d;$("questionText").textContent=item.q;$("feedback").textContent="Pilih balon dengan jawaban yang benar!";$("feedback").className="feedback";
+let order=item.a.map((_,i)=>i);for(let i=order.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]]}
+$("balloons").innerHTML="";order.forEach((answerIndex,n)=>{let b=document.createElement("button");b.className="balloon";b.style.setProperty("--balloon",colors[n%colors.length]);b.textContent=item.a[answerIndex];b.dataset.answer=answerIndex;b.setAttribute("aria-label","Jawaban: "+item.a[answerIndex]);b.addEventListener("click",()=>choose(b));$("balloons").appendChild(b)})}
+function choose(balloon){if(locked)return;let correct=Number(balloon.dataset.answer)===questions[index].c;if(correct){locked=true;balloon.classList.add("correct");score+=100; $("scoreLabel").textContent=score;$("feedback").textContent="🎉 Benar! "+questions[index].e;$("feedback").className="feedback good";playTone(660,.14);setTimeout(()=>{index++;if(index>=questions.length)finish();else render()},1450)}else{balloon.classList.add("wrong");$("feedback").textContent="Belum tepat. Coba pikirkan lagi, ya!";$("feedback").className="feedback bad";playTone(180,.12);setTimeout(()=>balloon.classList.remove("wrong"),400)}}
+function finish(){clearInterval(timer);$("progressFill").style.width="100%";$("finalScore").textContent=score;$("finishMessage").textContent="Luar biasa, "+name+"! Kamu berhasil menuntaskan 5 level majas personifikasi."; $("resultDetail").textContent="15 soal selesai · Waktu: "+fmt(seconds)+" · "+(score>=1200?"Pemahamanmu hebat!":score>=900?"Terus berlatih, kamu makin pintar!":"Terus semangat belajar!");show("finish");playTone(880,.25)}
+let audioCtx;function playTone(freq,duration){if(!soundOn)return;try{audioCtx=audioCtx||new(window.AudioContext||window.webkitAudioContext)();let o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);o.frequency.value=freq;o.type="sine";g.gain.setValueAtTime(.08,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+duration);o.start();o.stop(audioCtx.currentTime+duration)}catch(e){}}
+$("startBtn").addEventListener("click",start);$("studentName").addEventListener("keydown",e=>{if(e.key==="Enter")start()});$("againBtn").addEventListener("click",()=>{ $("studentName").value=name;start()});
+$("soundBtn").addEventListener("click",()=>{soundOn=!soundOn;$("soundBtn").textContent=soundOn?"🔊 Suara: ON":"🔇 Suara: OFF";$("soundBtn").classList.toggle("on",soundOn)});
+function mapPointer(x,y){let p=$("pointer");p.style.display="block";p.style.left=x+"px";p.style.top=y+"px";let el=document.elementFromPoint(x,y);let balloon=el&&el.closest(".balloon");document.querySelectorAll(".balloon.target").forEach(b=>b.classList.remove("target"));if(balloon)balloon.classList.add("target");return balloon}
+document.addEventListener("mousemove",e=>{if(!handReady)mapPointer(e.clientX,e.clientY)});
+document.addEventListener("touchstart",e=>{let t=e.touches[0];if(t&&!handReady)mapPointer(t.clientX,t.clientY)},{passive:true});
+async function enableCamera(){if(!navigator.mediaDevices?.getUserMedia){$("controlHint").textContent="Browser ini tidak mendukung akses kamera. Gunakan sentuh atau mouse.";return}
+ try{ $("cameraBtn").disabled=true;$("cameraBtn").textContent="Meminta izin…";stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:"user",width:640,height:480},audio:false});$("video").srcObject=stream;$("cameraWrap").style.display="block";
+ if(!window.Hands||!window.Camera){$("controlHint").textContent="MediaPipe gagal dimuat. Mouse/sentuh tetap bisa digunakan.";return}
+ hands=new Hands({locateFile:file=>`https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`});hands.setOptions({maxNumHands:1,modelComplexity:1,minDetectionConfidence:.65,minTrackingConfidence:.6});hands.onResults(onHandResults);
+ mpCamera=new Camera($("video"),{onFrame:async()=>{if(hands)await hands.send({image:$("video")})},width:640,height:480});await mpCamera.start();handReady=true;$("controlHint").textContent="Arahkan telunjuk ke balon, lalu satukan ibu jari dan telunjuk (pinch).";$("cameraBtn").textContent="📷 Kamera aktif";$("cameraBtn").disabled=false;
+ }catch(err){$("cameraBtn").disabled=false;$("cameraBtn").textContent="📷 Coba kamera lagi";$("controlHint").textContent=err.name==="NotAllowedError"?"Izin kamera ditolak. Izinkan kamera atau gunakan mouse/sentuh.":"Kamera tidak dapat diakses. Gunakan mouse/sentuh.";console.warn(err)}}
+function onHandResults(results){let canvas=$("handCanvas"),ctx=canvas.getContext("2d");canvas.width=canvas.clientWidth*2;canvas.height=canvas.clientHeight*2;ctx.clearRect(0,0,canvas.width,canvas.height);if(!results.multiHandLandmarks?.length)return;let lm=results.multiHandLandmarks[0],tip=lm[8],thumb=lm[4];let x=(1-tip.x)*window.innerWidth,y=tip.y*window.innerHeight;let target=mapPointer(x,y);let pinch=Math.hypot(tip.x-thumb.x,tip.y-thumb.y)<.055;ctx.fillStyle=pinch?"#ff4f9b":"#ffffff";ctx.beginPath();ctx.arc((1-tip.x)*canvas.width,tip.y*canvas.height,10,0,Math.PI*2);ctx.fill();if(pinch&&!pinchWasDown&&Date.now()-lastPinch>450){lastPinch=Date.now();if(target)choose(target)}pinchWasDown=pinch}
+$("cameraBtn").addEventListener("click",enableCamera);
+window.addEventListener("beforeunload",()=>{if(stream)stream.getTracks().forEach(t=>t.stop());if(mpCamera)mpCamera.stop()});
+</script>
+</body>
+</html>
